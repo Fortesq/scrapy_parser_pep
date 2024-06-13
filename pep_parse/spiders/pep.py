@@ -6,21 +6,28 @@ from pep_parse.items import PepParseItem
 class PepSpider(scrapy.Spider):
     name = 'pep'
     allowed_domains = ['peps.python.org']
-    start_urls = ['http://peps.python.org/']
+    start_urls = ['https://peps.python.org/']
 
     def parse(self, response):
-        all_pep = response.xpath('//*[@id="numerical-index"]')
-        tbody = all_pep.css('tbody')
-        href_pep = tbody.css('a[href^="/pep-"]')
-        for pep_url in href_pep:
-            yield response.follow(pep_url, callback=self.parse_pep)
+        table = response.css("section[id='numerical-index']")
+        all_peps = table.css('tbody')
+        all_peps_links = all_peps.css('a::attr(href)').getall()
+        for pep_link in all_peps_links:
+            pep_link = pep_link + '/'
+            yield response.follow(pep_link, callback=self.parse_pep)
 
 
     def parse_pep(self, response):
-        title = response.css('h1.page-title::text').get().split(' - ')
-        data = {
-            'number': title[0][4:],
-            'name': title[1],
-            'status': response.css('dt:contains("Status") + dd::text').get()
+        pep_info = response.css("section[id='pep-content']")
+        number, name = (
+            pep_info.css(
+                'h1.page-title::text'
+            ).get().split(' – ', 1)
+        )
+        pep_status = pep_info.css('abbr::text').get()
+        pep_data = {
+            'number': number.split()[1],
+            'name': name,
+            'status': pep_status
         }
-        yield PepParseItem(data)
+        yield PepParseItem(pep_data)

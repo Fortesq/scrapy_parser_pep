@@ -16,7 +16,6 @@ class PepSpider(scrapy.Spider):
             pep_link = pep_link + '/'
             yield response.follow(pep_link, callback=self.parse_pep)
 
-
     def parse_pep(self, response):
         pep_info = response.css("section[id='pep-content']")
         number, name = (

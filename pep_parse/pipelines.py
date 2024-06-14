@@ -22,7 +22,10 @@ class PepParsePipeline:
         return item
 
     def close_spider(self, spider):
-        path = str(BASE_DIR / STATUS_SUMMARY)
+        path = BASE_DIR / f'results/status_summary_{TIME}.csv'
+        # При таком варианте - тесты локально Ок.
+        # Тесты при отправке задания - падают.
+        # path = str(BASE_DIR / STATUS_SUMMARY)
         total = sum(self.status_count.values())
         data = (
             ('Статус', 'Количество'),

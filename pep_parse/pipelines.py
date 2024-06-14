@@ -22,7 +22,7 @@ class PepParsePipeline:
         return item
 
     def close_spider(self, spider):
-        path = BASE_DIR / STATUS_SUMMARY
+        path = str(BASE_DIR / STATUS_SUMMARY)
         total = sum(self.status_count.values())
         data = (
             ('Статус', 'Количество'),

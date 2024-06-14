@@ -1,7 +1,9 @@
 BOT_NAME = 'pep_parse'
 
-SPIDER_MODULES = ['pep_parse.spiders']
-NEWSPIDER_MODULE = 'pep_parse.spiders'
+PEP_SPIDER = 'pep_parse.spiders'
+
+NEWSPIDER_MODULE = PEP_SPIDER
+SPIDER_MODULES = [PEP_SPIDER]
 
 ROBOTSTXT_OBEY = True
 
